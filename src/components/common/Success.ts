@@ -1,38 +1,39 @@
-import {Component} from "../base/Component";
-import {ensureElement, formatNumber} from "../../utils/utils";
+import { Component } from '../base/Component';
+import { ensureElement, formatNumber } from '../../utils/utils';
 
 interface ISuccess {
-    total: number;
+	total: number;
 }
 
 interface ISuccessActions {
-    onClick: () => void;
+	onClick: () => void;
 }
 
 export class Success extends Component<ISuccess> {
-    protected _close: HTMLElement;
-    protected _total: HTMLElement;
+	protected _close: HTMLElement;
+	protected _total: HTMLElement;
 
-    constructor(container: HTMLElement, actions: ISuccessActions) {
-        super(container);
+	constructor(container: HTMLElement, actions: ISuccessActions) {
+		super(container);
 
-        this._close = ensureElement<HTMLElement>('.order-success__close', this.container);
-        this._total = container.querySelector('.order-success__description')
+		this._close = ensureElement<HTMLElement>(
+			'.order-success__close',
+			this.container
+		);
+		this._total = ensureElement<HTMLElement>('.order-success__description',this.container);
 
-        if (actions?.onClick) {
-            this._close.addEventListener('click', actions.onClick);
-        }
-    }
+		if (actions?.onClick) {
+			this._close.addEventListener('click', actions.onClick);
+		}
+	}
 
-    set total(total: number) {
-        if (total >0) {
-            this.setText(this._total, `Списано ${total} синапсов`)
-        }
-        else if (total>9999){
-            this.setText(this._total, `Списано ${formatNumber(total)} синапсов`);
-          } 
-        else {
-            this.setText(this._total, '');
-        }
-    }
+	set total(total: number) {
+		if (total > 0) {
+			this.setText(this._total, `Списано ${total} синапсов`);
+		} else if (total > 9999) {
+			this.setText(this._total, `Списано ${formatNumber(total)} синапсов`);
+		} else {
+			this.setText(this._total, '');
+		}
+	}
 }

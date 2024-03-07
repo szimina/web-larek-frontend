@@ -1,20 +1,19 @@
 import {Form} from "./common/Form";
 import {IOrderForm} from "../types";
 import {IEvents} from "./base/events";
+import { ensureElement } from "../utils/utils";
 
 
 export class OrderAddress extends Form<IOrderForm> {
     protected _cash: HTMLButtonElement;
     protected _card: HTMLButtonElement;
     protected _address: HTMLInputElement;
-    protected _button: HTMLButtonElement;
     
     constructor(container: HTMLFormElement, events: IEvents) {
         super(container, events);
-        this._cash = container.querySelector('[name="cash"]')
-        this._card = container.querySelector('[name="card"]')
-        this._button = container.querySelector(".button"); //посмотреть, нужен ли этот параметр, т.к. подтягивается из родителя
-        this._address = container.querySelector('[name="address"]')
+        this._cash = ensureElement<HTMLButtonElement>('[name="cash"]', this.container) 
+        this._card = ensureElement<HTMLButtonElement>('[name="card"]', this.container) 
+        this._address = ensureElement<HTMLInputElement>('[name="address"]', this.container)
         
         this._cash.addEventListener('click', () => {
             events.emit('order:cash');
@@ -47,13 +46,11 @@ export class OrderAddress extends Form<IOrderForm> {
 export class OrderContacts extends Form<IOrderForm> {
     protected _email: HTMLInputElement;
     protected _phone: HTMLInputElement;
-    protected _button: HTMLButtonElement;
     
 
     constructor(container: HTMLFormElement, events: IEvents) {
         super(container, events);
-        this._button = container.querySelector(".button"); //посмотреть, нужен ли этот параметр, т.к. подтягивается из родителя
-        this._email = container.querySelector('[name="email"]')
+        this._email = ensureElement<HTMLInputElement>('[name="email"]', this.container)
         this._phone = container.querySelector('[name="phone"]')
     }
 
@@ -64,5 +61,4 @@ export class OrderContacts extends Form<IOrderForm> {
     set email(value: string) {
         (this.container.elements.namedItem('email') as HTMLInputElement).value = value;
     }
-
 }

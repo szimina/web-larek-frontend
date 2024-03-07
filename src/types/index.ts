@@ -9,11 +9,10 @@ export interface IItem {
     price: number;
   }
 
-
 //интерфейс состояния приложения
 export interface IAppState {
     catalog: IItem[];
-    order: IOrder | null;
+    order: IOrder //| null;
 }
 
 export interface IOrderForm {
@@ -29,7 +28,6 @@ export interface IOrder extends IOrderForm {
 }
 
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
-
 
 export interface IOrderResult {
     id: string;
