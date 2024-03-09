@@ -1,10 +1,7 @@
 import _ from 'lodash';
 import { Model } from './base/Model';
 import { FormErrors, IItem, IOrder, IOrderForm, IAppState } from '../types';
-
-export type CatalogChangeEvent = {
-	catalog: IItem[];
-};
+import { ErrorMessage, Events } from '../utils/constants';
 
 export class Item extends Model<IItem> {
 	id: string;
@@ -29,11 +26,11 @@ export class AppState extends Model<IAppState> {
 
 	setCatalog(items: IItem[]) {
 		this.catalog = items.map((item) => new Item(item, this.events));
-		this.emitChanges('items:changed', { catalog: this.catalog });
+		this.emitChanges(Events.ITEMS_CHANGED, { catalog: this.catalog });
 	}
 
 	setPreview(item: Item) {
-		this.emitChanges('preview:changed', item);
+		this.emitChanges(Events.PREVIEW_CHANGED, item);
 	}
 
 	toggleOrderedLot(id: string, isIncluded: boolean) {
@@ -46,7 +43,8 @@ export class AppState extends Model<IAppState> {
 
 	getTotal() {
 		return this.order.items.reduce(
-			(a, c) => a + this.catalog.find((it) => it.id === c).price,
+			(total, currentId) =>
+				total + this.catalog.find((item) => item.id === currentId).price,
 			0
 		);
 	}
@@ -59,26 +57,26 @@ export class AppState extends Model<IAppState> {
 		this.order[field] = value;
 
 		if (this.validateOrder()) {
-			this.events.emit('order:ready', this.order);
+			this.events.emit(Events.ORDER_READY, this.order);
 		}
 	}
 
 	validateOrder() {
 		const errors: typeof this.formErrors = {};
 		if (!this.order.payment) {
-			errors.payment = 'Необходимо выбрать способ оплаты';
+			errors.payment = ErrorMessage.PAYMENT;
 		}
 		if (!this.order.email) {
-			errors.email = 'Необходимо указать email';
+			errors.email = ErrorMessage.EMAIL;
 		}
 		if (!this.order.phone) {
-			errors.phone = 'Необходимо указать телефон';
+			errors.phone = ErrorMessage.PHONE;
 		}
 		if (!this.order.address) {
-			errors.address = 'Необходимо указать адрес';
+			errors.address = ErrorMessage.ADDRESS;
 		}
 		this.formErrors = errors;
-		this.events.emit('formErrors:change', this.formErrors);
+		this.events.emit(Events.FORM_ERRORS_CHANGE, this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
 

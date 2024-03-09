@@ -1,5 +1,6 @@
 import { Component } from '../base/Component';
 import { ensureElement } from '../../utils/utils';
+import { Events } from '../../utils/constants';
 import { IEvents } from '../base/events';
 
 interface IModalData {
@@ -30,13 +31,13 @@ export class Modal extends Component<IModalData> {
 
 	open() {
 		this.container.classList.add('modal_active');
-		this.events.emit('modal:open');
+		this.events.emit(Events.MODAL_OPEN);
 	}
 
 	close() {
 		this.container.classList.remove('modal_active');
 		this.content = null;
-		this.events.emit('modal:close');
+		this.events.emit(Events.MODAL_CLOSE);
 	}
 
 	render(data: IModalData): HTMLElement {

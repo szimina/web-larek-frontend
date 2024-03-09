@@ -9,7 +9,7 @@ export interface ILarekAPI {
 
 export class larekAPI extends Api implements ILarekAPI {
 	readonly cdn: string;
-	readonly cash: IItem[];
+	// readonly cash: IItem[];
 
 	constructor(cdn: string, baseUrl: string, options?: RequestInit) {
 		super(baseUrl, options);
